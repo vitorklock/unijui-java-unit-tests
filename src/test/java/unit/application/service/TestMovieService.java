@@ -18,10 +18,6 @@ import repositories.inmemory.MovieRepository;
 class MovieRepositorySpy extends MovieRepository {
 }
 
-/**
- *
- * @author klock
- */
 public class TestMovieService {
 
     private MovieRepository repo;
@@ -67,8 +63,7 @@ public class TestMovieService {
 
         ArrayList<Movie> foundMovies = service.findByName(movie.getName());
 
-           
-        
+        Assertions.assertTrue(foundMovies.contains(movie));
     }
 
     @Test
@@ -79,6 +74,20 @@ public class TestMovieService {
         service.rentMovie(movie);
 
         Assertions.assertFalse(movie.isAvailable());
+    }
+
+    public void mustNotRentAlreadyRentedMovie() {
+
+        service.save(movie);
+
+        service.rentMovie(movie);
+        Assertions.assertFalse(movie.isAvailable());
+
+        IllegalStateException ex = Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> service.rentMovie(movie)
+        );
+
     }
 
 }
