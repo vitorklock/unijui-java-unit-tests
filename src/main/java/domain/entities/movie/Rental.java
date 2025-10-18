@@ -4,6 +4,13 @@
  */
 package domain.entities.movie;
 
+// Deve ter:
+// inicio do aluguel (data de retirada)
+// fim do aluguel 
+// data de retorno
+// multa (valor reais)
+// multa paga (booleano)
+
 public class Rental {
 
 }
