@@ -43,7 +43,7 @@ public class TestMovieService {
         Movie savedMovie = optionalSavedMovie.get();
 
         Assertions.assertNotNull(savedMovie);
-        Assertions.assertEquals(movie.getId(), savedMovie);
+        Assertions.assertEquals(movie.getId(), savedMovie.getId());
     }
 
     @Test
