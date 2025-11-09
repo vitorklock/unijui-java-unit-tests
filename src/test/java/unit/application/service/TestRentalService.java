@@ -64,7 +64,8 @@ public class TestRentalService {
     @Test
     public void mustHaveFeeToBePaid() {
         //movie is rented for a week automatically, 10 days after rental should be late
-        rental.setReturnDate(LocalDate.now().plusDays(10));
+        service.save(rental);
+        service.returnMovie(rental, LocalDate.now().plusDays(10));
         
         Assertions.assertEquals(20.00, rental.getLateFee(), 0.0001);
     }
