@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package domain.entities.movie;
 
 import java.time.LocalDate;
@@ -83,6 +79,26 @@ public class Rental {
 
     public void setPaidFee(boolean paidFee) {
         this.paidFee = paidFee;
+    }
+    public void updateReturn(LocalDate newReturnDate){
+        setReturnDate(newReturnDate);
+        setLateFee(calculateLateFee(getEndDate(), newReturnDate));
+        setPaidFee(false);
+        
+    }
+    
+    public void updateRentalDates(){
+        LocalDate today = LocalDate.now();
+        setStartDate(today);
+        setEndDate(today.plusDays(7));
+    }
+    private double calculateLateFee(LocalDate endDate, LocalDate returndate){
+        //fixed late fee of 20 for the time being
+        //in the future might be calculated based on how many days the movie is late
+        double newLateFee = 0;
+        if (returndate.isAfter(endDate)){
+            newLateFee = 20; }
+        return newLateFee;
     }
     
 }
