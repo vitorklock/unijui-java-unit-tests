@@ -15,8 +15,11 @@ import application.repositories.inmemory.MovieRepository;
 import application.repositories.inmemory.RentalRepository;
 
 // Simple “IT” repositories to keep symmetry with the unit tests
-class MovieRepositoryIT extends MovieRepository {}
-class RentalRepositoryIT extends RentalRepository {}
+class MovieRepositoryIT extends MovieRepository {
+}
+
+class RentalRepositoryIT extends RentalRepository {
+}
 
 public class TestMovieRentalIntegration {
 
@@ -30,13 +33,12 @@ public class TestMovieRentalIntegration {
         movieRepo = new MovieRepositoryIT();
         rentalRepo = new RentalRepositoryIT();
         movieService = new MovieService(movieRepo);
-        rentalService = new RentalService(rentalRepo);
+        rentalService = new RentalService(rentalRepo, movieService);
     }
 
     // -------------------------------------------------------------------------
     // SCENARIO 1 – Customer rents an available movie and uses search features
     // -------------------------------------------------------------------------
-
     @Test
     @DisplayName("Scenario 1.1 - Customer rents an available movie: rental is created and movie becomes unavailable")
     void scenario1_customerRentsAvailableMovie() {
@@ -118,7 +120,6 @@ public class TestMovieRentalIntegration {
     // -------------------------------------------------------------------------
     // SCENARIO 2 – Customer returns a movie late, gets a fee, and pays it
     // -------------------------------------------------------------------------
-
     @Test
     @DisplayName("Scenario 2.1 - Late return must generate a fixed late fee of 20")
     void scenario2_lateReturnGeneratesFee() {

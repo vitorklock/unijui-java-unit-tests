@@ -28,9 +28,7 @@ public class RentalController {
 
     @PostMapping
     public Rental createRental(@RequestBody CreateRentalRequest request) {
-        Movie movie = movieService.findById(request.getMovieId());
-        Rental rental = new Rental(movie);
-        return rentalService.save(rental);
+        return rentalService.createRentalForMovie(request.getMovieId());
     }
 
     @GetMapping
@@ -43,14 +41,15 @@ public class RentalController {
     }
 
     @GetMapping("/{id}")
-    public Rental getById(@PathVariable("id") int id) {   // 👈
+    public Rental getById(@PathVariable("id") int id) {
         return rentalService.findById(id);
     }
 
     @PostMapping("/{id}/return")
     public Rental returnRental(
-            @PathVariable("id") int id,                   // 👈
+            @PathVariable("id") int id,
             @RequestParam("returnDate") String returnDate) {
+
         Rental rental = rentalService.findById(id);
         LocalDate parsedDate = LocalDate.parse(returnDate);
         rentalService.returnMovie(rental, parsedDate);
@@ -58,7 +57,7 @@ public class RentalController {
     }
 
     @PostMapping("/{id}/pay-late-fee")
-    public Rental payLateFee(@PathVariable("id") int id) { // 👈
+    public Rental payLateFee(@PathVariable("id") int id) {
         Rental rental = rentalService.findById(id);
         rentalService.payLateFee(rental);
         return rental;

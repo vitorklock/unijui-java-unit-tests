@@ -27,22 +27,12 @@
 
         <hr>
 
-        <!-- RENT MOVIE -->
+        <!-- RENT MOVIE (CREATES RENTAL + MARKS UNAVAILABLE) -->
         <section>
-            <h2>Rent Movie (mark as unavailable)</h2>
+            <h2>Rent Movie (creates Rental and marks movie as unavailable)</h2>
             <input id="rent-movie-id" type="number" placeholder="Movie ID">
             <button onclick="rentMovie()">Rent</button>
             <pre id="rent-movie-result"></pre>
-        </section>
-
-        <hr>
-
-        <!-- CREATE RENTAL -->
-        <section>
-            <h2>Create Rental for Movie</h2>
-            <input id="rental-movie-id" type="number" placeholder="Movie ID">
-            <button onclick="createRental()">Create Rental</button>
-            <pre id="create-rental-result"></pre>
         </section>
 
         <hr>
@@ -88,70 +78,62 @@
                 fetch(`${API}/movies`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({name})
+                    body: JSON.stringify({ name })
                 })
-                        .then(res => res.json())
-                        .then(data => showJson('create-movie-result', data))
-                        .catch(err => alert(err));
+                .then(res => res.json())
+                .then(data => showJson('create-movie-result', data))
+                .catch(err => alert(err));
             }
 
             function searchMovies() {
                 const name = document.getElementById('search-movie-name').value;
-                const url = name ? `${API}/movies?name=${encodeURIComponent(name)}` : `${API}/movies`;
+                const url = name
+                    ? `${API}/movies?name=${encodeURIComponent(name)}`
+                    : `${API}/movies`;
                 fetch(url)
-                        .then(res => res.json())
-                        .then(data => showJson('search-movies-result', data))
-                        .catch(err => alert(err));
+                .then(res => res.json())
+                .then(data => showJson('search-movies-result', data))
+                .catch(err => alert(err));
             }
 
             function rentMovie() {
                 const id = document.getElementById('rent-movie-id').value;
-                fetch(`${API}/movies/${id}/rent`, {method: 'POST'})
-                        .then(res => res.json())
-                        .then(data => showJson('rent-movie-result', data))
-                        .catch(err => alert(err));
-            }
-
-            function createRental() {
-                const movieId = parseInt(document.getElementById('rental-movie-id').value, 10);
-                fetch(`${API}/rentals`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({movieId})
-                })
-                        .then(res => res.json())
-                        .then(data => showJson('create-rental-result', data))
-                        .catch(err => alert(err));
+                fetch(`${API}/movies/${id}/rent`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showJson('rent-movie-result', data)) // this is a Rental JSON
+                .catch(err => alert(err));
             }
 
             function searchRentals() {
                 const movieName = document.getElementById('search-rental-movie-name').value;
                 const url = movieName
-                        ? `${API}/rentals?movieName=${encodeURIComponent(movieName)}`
-                        : `${API}/rentals`;
+                    ? `${API}/rentals?movieName=${encodeURIComponent(movieName)}`
+                    : `${API}/rentals`;
                 fetch(url)
-                        .then(res => res.json())
-                        .then(data => showJson('search-rentals-result', data))
-                        .catch(err => alert(err));
+                .then(res => res.json())
+                .then(data => showJson('search-rentals-result', data))
+                .catch(err => alert(err));
             }
 
             function returnRental() {
                 const rentalId = document.getElementById('return-rental-id').value;
                 const returnDate = document.getElementById('return-date').value; // yyyy-MM-dd
                 const url = `${API}/rentals/${rentalId}/return?returnDate=${encodeURIComponent(returnDate)}`;
-                fetch(url, {method: 'POST'})
-                        .then(res => res.json())
-                        .then(data => showJson('return-rental-result', data))
-                        .catch(err => alert(err));
+                fetch(url, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showJson('return-rental-result', data))
+                .catch(err => alert(err));
             }
 
             function payLateFee() {
                 const rentalId = document.getElementById('pay-rental-id').value;
-                fetch(`${API}/rentals/${rentalId}/pay-late-fee`, {method: 'POST'})
-                        .then(res => res.json())
-                        .then(data => showJson('pay-fee-result', data))
-                        .catch(err => alert(err));
+                fetch(`${API}/rentals/${rentalId}/pay-late-fee`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showJson('pay-fee-result', data))
+                .catch(err => alert(err));
             }
+            
+            searchMovies();
         </script>
     </body>
 </html>

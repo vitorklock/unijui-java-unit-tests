@@ -14,21 +14,23 @@ import application.repositories.inmemory.RentalRepository;
 public class RentalService {
 
     private final RentalRepository rentals;
+    private final MovieService movieService;
 
-    public RentalService(RentalRepository rentals) {
+    public RentalService(RentalRepository rentals, MovieService movieService) {
         this.rentals = rentals;
+        this.movieService = movieService;
     }
 
     public Rental save(Rental rental) {
         Objects.requireNonNull(rental, "Rental cannot be null");
         rental.updateRentalDates();
-
         return rentals.save(rental);
     }
 
     public Rental findById(int id) {
         Objects.requireNonNull(id, "Must inform an Id");
-        return rentals.findById(id).orElseThrow(() -> new NoSuchElementException("Rental not found with id: " + id));
+        return rentals.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Rental not found with id: " + id));
     }
 
     public ArrayList<Rental> findByMovieName(String movieName) {
@@ -38,15 +40,32 @@ public class RentalService {
         String searchName = movieName.toLowerCase().trim();
 
         return rentals.findAll().stream()
-                .filter(rental -> rental.getRentedMovie().getName().toLowerCase().contains(
-                searchName))
+                .filter(rental -> rental.getRentedMovie().getName().toLowerCase().contains(searchName))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Rental createRentalForMovie(int movieId) {
+        // find and mark movie as rented (unavailable)
+        Movie movie = movieService.findById(movieId);
+        movieService.rentMovie(movie); // uses existing logic & checks
+
+        // create and persist rental
+        Rental rental = new Rental(movie);
+        rental.updateRentalDates();
+        return rentals.save(rental);
     }
 
     public void returnMovie(Rental rental, LocalDate returnDate) {
         Objects.requireNonNull(rental, "Rental cannot be null");
         Objects.requireNonNull(returnDate, "Return date cannot be null");
+
         rental.updateReturn(returnDate);
+
+        Movie movie = rental.getRentedMovie();
+        if (movie != null) {
+            movie.setAvailable(true);
+            movieService.save(movie);
+        }
     }
 
     public void payLateFee(Rental rental) {
@@ -66,5 +85,4 @@ public class RentalService {
     public ArrayList<Rental> findAll() {
         return new ArrayList<>(rentals.findAll());
     }
-
 }

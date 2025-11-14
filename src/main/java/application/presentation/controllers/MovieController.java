@@ -1,18 +1,22 @@
 package application.presentation.controllers;
 
 import application.application.services.MovieService;
+import application.application.services.RentalService;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.*;
 import application.domain.entities.movie.Movie;
+import application.domain.entities.rental.Rental;
 
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
 
     private final MovieService movieService;
+    private final RentalService rentalService;
 
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieService movieService, RentalService rentalService) {
         this.movieService = movieService;
+        this.rentalService = rentalService;
     }
 
     public static class CreateMovieRequest {
@@ -28,7 +32,7 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public Movie getById(@PathVariable("id") int id) {   // 👈 explicit name
+    public Movie getById(@PathVariable("id") int id) {
         return movieService.findById(id);
     }
 
@@ -42,9 +46,7 @@ public class MovieController {
     }
 
     @PostMapping("/{id}/rent")
-    public Movie rentMovie(@PathVariable("id") int id) {  // 👈 explicit name
-        Movie movie = movieService.findById(id);
-        movieService.rentMovie(movie);
-        return movie;
+    public Rental rentMovie(@PathVariable("id") int id) {
+        return rentalService.createRentalForMovie(id);
     }
 }
