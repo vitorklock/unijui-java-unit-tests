@@ -23,15 +23,15 @@ Esta aplicação foi desenvolvida utilizando TDD (Red → Green → Refactor) pa
 
 ### Ciclo TDD – Movies
 
-- **Red**: [6ac855](https://github.com/vitorklock/unijui-java-unit-tests/commit/6ac855e12d4d8cb0db796c12f7c82e83c20c03e6)
-- **Green**: [8f3011](https://github.com/vitorklock/unijui-java-unit-tests/commit/8f30116a3f0cad4e20a2f75d669dd632af21e911)
-- **Refactor**: [32624d](https://github.com/vitorklock/unijui-java-unit-tests/commit/32624d62d4bbbba1c2ed9cd380f716932ebb3897)
+- **Red**: [6ac855](https://github.com/vitorklock/unijui-java-unit-tests/tree/6ac855e12d4d8cb0db796c12f7c82e83c20c03e6)
+- **Green**: [8f3011](https://github.com/vitorklock/unijui-java-unit-tests/tree/8f30116a3f0cad4e20a2f75d669dd632af21e911)
+- **Refactor**: [32624d](https://github.com/vitorklock/unijui-java-unit-tests/tree/32624d62d4bbbba1c2ed9cd380f716932ebb3897)
 
 ### Ciclo TDD – Rentals
 
-- **Red**: [431bbd](https://github.com/vitorklock/unijui-java-unit-tests/commit/431bbd24d5b2cc6094a89c3ebb927e2fc5cc4656)
-- **Green**: [3ecb15](https://github.com/vitorklock/unijui-java-unit-tests/commit/3ecb154d0c4e3616d74356cacd46c8a66ef256d2)
-- **Refactor**: [22b22c](https://github.com/vitorklock/unijui-java-unit-tests/commit/22b22c2bac0046582224ce844f05794bff4843fb)
+- **Red**: [431bbd](https://github.com/vitorklock/unijui-java-unit-tests/tree/431bbd24d5b2cc6094a89c3ebb927e2fc5cc4656)
+- **Green**: [3ecb15](https://github.com/vitorklock/unijui-java-unit-tests/tree/3ecb154d0c4e3616d74356cacd46c8a66ef256d2)
+- **Refactor**: [22b22c](https://github.com/vitorklock/unijui-java-unit-tests/tree/22b22c2bac0046582224ce844f05794bff4843fb)
 
 
 ---
