@@ -237,4 +237,4 @@ Guarde um `rental.id` para os próximos passos.
 7. Devolver com data (talvez gerando multa).
 8. Pagar a multa se existir.
 
-Pronto: com isso você testa toda a lógica de `Movie`, `Rental`, Services, Controllers e a página `index.html` de ponta a ponta.
+Com isso você testa toda a lógica de `Movie`, `Rental`, Services, Controllers e a página `index.html` de ponta a ponta.
