@@ -20,6 +20,7 @@ Tudo é guardado em memória (collections em repositórios in-memory). Ao reinic
 ## Desenvolvimento guiado por testes (TDD)
 
 Esta aplicação foi desenvolvida utilizando TDD (Red → Green → Refactor) para as regras de domínio de filmes e locações. 
+
 Abaixo temos os commits de cada etapa, com links para navegar o repositório no momento do commit. 
 
 ### Ciclo TDD – Movies
