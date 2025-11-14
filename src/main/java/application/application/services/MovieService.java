@@ -1,14 +1,16 @@
-package application.services;
+package application.application.services;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import domain.entities.movie.Movie;
-import domain.entities.movie.Rental;
-import repositories.inmemory.MovieRepository;
+import application.domain.entities.movie.Movie;
+import application.domain.entities.rental.Rental;
+import org.springframework.stereotype.Service;
+import application.repositories.inmemory.MovieRepository;
 
+@Service
 public class MovieService {
 
     private final MovieRepository movies;
@@ -16,7 +18,7 @@ public class MovieService {
     public MovieService(MovieRepository movies) {
         this.movies = Objects.requireNonNull(movies, "MovieRepository cannot be null");
     }
-    
+
     public Movie save(Movie movie) {
         Objects.requireNonNull(movie, "Movie cannot be null");
         return movies.save(movie);
@@ -30,7 +32,7 @@ public class MovieService {
         if (isNullOrBlank(name)) {
             return new ArrayList<>();
         }
-        
+
         String searchName = normalizeName(name);
         return movies.findAll().stream()
                 .filter(movie -> containsName(movie, searchName))
@@ -39,10 +41,10 @@ public class MovieService {
 
     public void rentMovie(Movie movie) {
         Objects.requireNonNull(movie, "Movie cannot be null");
-        
+
         Movie existingMovie = findMovieOrFail(movie.getId());
         ensureMovieIsAvailable(existingMovie);
-        
+
         existingMovie.setAvailable(false);
         movies.save(existingMovie);
     }
@@ -55,7 +57,7 @@ public class MovieService {
     private void ensureMovieIsAvailable(Movie movie) {
         if (!movie.isAvailable()) {
             throw new IllegalStateException(
-                String.format("Movie with id %d is already rented", movie.getId())
+                    String.format("Movie with id %d is already rented", movie.getId())
             );
         }
     }
@@ -70,6 +72,10 @@ public class MovieService {
 
     private boolean containsName(Movie movie, String searchName) {
         return movie.getName().toLowerCase().contains(searchName);
+    }
+
+    public ArrayList<Movie> findAll() {
+        return new ArrayList<>(movies.findAll());
     }
 
 //    public Rental returnMovie(Movie movie) {

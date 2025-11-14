@@ -4,16 +4,16 @@
  */
 package unit.application.service;
 
-import application.services.MovieService;
-import shared.repository.InMemoryRepository;
-import domain.entities.movie.Movie;
+import application.application.services.MovieService;
+import application.shared.repository.InMemoryRepository;
+import application.domain.entities.movie.Movie;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repositories.inmemory.MovieRepository;
+import application.repositories.inmemory.MovieRepository;
 
 class MovieRepositorySpy extends MovieRepository {
 }

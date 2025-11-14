@@ -1,9 +1,9 @@
 package integration;
 
-import application.services.MovieService;
-import application.services.RentalService;
-import domain.entities.movie.Movie;
-import domain.entities.movie.Rental;
+import application.application.services.MovieService;
+import application.application.services.RentalService;
+import application.domain.entities.movie.Movie;
+import application.domain.entities.rental.Rental;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import repositories.inmemory.MovieRepository;
-import repositories.inmemory.RentalRepository;
+import application.repositories.inmemory.MovieRepository;
+import application.repositories.inmemory.RentalRepository;
 
 // Simple “IT” repositories to keep symmetry with the unit tests
 class MovieRepositoryIT extends MovieRepository {}

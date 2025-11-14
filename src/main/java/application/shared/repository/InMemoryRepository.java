@@ -1,4 +1,4 @@
-package shared.repository;
+package application.shared.repository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

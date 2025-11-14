@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Movie Rental – E2E Test</title>
+    </head>
+    <body>
+        <h1>Movie Rental – E2E Test</h1>
+
+        <!-- CREATE MOVIE -->
+        <section>
+            <h2>Create Movie</h2>
+            <input id="movie-name" placeholder="Movie name">
+            <button onclick="createMovie()">Create</button>
+            <pre id="create-movie-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- LIST / SEARCH MOVIES -->
+        <section>
+            <h2>Search Movies</h2>
+            <input id="search-movie-name" placeholder="Search by name (empty = all)">
+            <button onclick="searchMovies()">Search</button>
+            <pre id="search-movies-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- RENT MOVIE -->
+        <section>
+            <h2>Rent Movie (mark as unavailable)</h2>
+            <input id="rent-movie-id" type="number" placeholder="Movie ID">
+            <button onclick="rentMovie()">Rent</button>
+            <pre id="rent-movie-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- CREATE RENTAL -->
+        <section>
+            <h2>Create Rental for Movie</h2>
+            <input id="rental-movie-id" type="number" placeholder="Movie ID">
+            <button onclick="createRental()">Create Rental</button>
+            <pre id="create-rental-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- LIST / SEARCH RENTALS -->
+        <section>
+            <h2>Search Rentals by Movie Name</h2>
+            <input id="search-rental-movie-name" placeholder="Movie name (empty = all)">
+            <button onclick="searchRentals()">Search</button>
+            <pre id="search-rentals-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- RETURN RENTAL -->
+        <section>
+            <h2>Return Rental (generate late fee if late)</h2>
+            <input id="return-rental-id" type="number" placeholder="Rental ID">
+            <input id="return-date" type="date">
+            <button onclick="returnRental()">Return</button>
+            <pre id="return-rental-result"></pre>
+        </section>
+
+        <hr>
+
+        <!-- PAY LATE FEE -->
+        <section>
+            <h2>Pay Late Fee</h2>
+            <input id="pay-rental-id" type="number" placeholder="Rental ID">
+            <button onclick="payLateFee()">Pay Fee</button>
+            <pre id="pay-fee-result"></pre>
+        </section>
+
+        <script>
+            const API = '/api';
+
+            function showJson(elementId, data) {
+                document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+            }
+
+            function createMovie() {
+                const name = document.getElementById('movie-name').value;
+                fetch(`${API}/movies`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name})
+                })
+                        .then(res => res.json())
+                        .then(data => showJson('create-movie-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function searchMovies() {
+                const name = document.getElementById('search-movie-name').value;
+                const url = name ? `${API}/movies?name=${encodeURIComponent(name)}` : `${API}/movies`;
+                fetch(url)
+                        .then(res => res.json())
+                        .then(data => showJson('search-movies-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function rentMovie() {
+                const id = document.getElementById('rent-movie-id').value;
+                fetch(`${API}/movies/${id}/rent`, {method: 'POST'})
+                        .then(res => res.json())
+                        .then(data => showJson('rent-movie-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function createRental() {
+                const movieId = parseInt(document.getElementById('rental-movie-id').value, 10);
+                fetch(`${API}/rentals`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({movieId})
+                })
+                        .then(res => res.json())
+                        .then(data => showJson('create-rental-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function searchRentals() {
+                const movieName = document.getElementById('search-rental-movie-name').value;
+                const url = movieName
+                        ? `${API}/rentals?movieName=${encodeURIComponent(movieName)}`
+                        : `${API}/rentals`;
+                fetch(url)
+                        .then(res => res.json())
+                        .then(data => showJson('search-rentals-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function returnRental() {
+                const rentalId = document.getElementById('return-rental-id').value;
+                const returnDate = document.getElementById('return-date').value; // yyyy-MM-dd
+                const url = `${API}/rentals/${rentalId}/return?returnDate=${encodeURIComponent(returnDate)}`;
+                fetch(url, {method: 'POST'})
+                        .then(res => res.json())
+                        .then(data => showJson('return-rental-result', data))
+                        .catch(err => alert(err));
+            }
+
+            function payLateFee() {
+                const rentalId = document.getElementById('pay-rental-id').value;
+                fetch(`${API}/rentals/${rentalId}/pay-late-fee`, {method: 'POST'})
+                        .then(res => res.json())
+                        .then(data => showJson('pay-fee-result', data))
+                        .catch(err => alert(err));
+            }
+        </script>
+    </body>
+</html>

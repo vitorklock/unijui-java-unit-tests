@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import domain.entities.movie.Rental;
-import application.services.RentalService;
-import domain.entities.movie.Movie;
-import repositories.inmemory.RentalRepository;
+import application.domain.entities.rental.Rental;
+import application.application.services.RentalService;
+import application.domain.entities.movie.Movie;
+import application.repositories.inmemory.RentalRepository;
 import java.time.LocalDate;
 
 class RentalRepositorySpy extends RentalRepository{}

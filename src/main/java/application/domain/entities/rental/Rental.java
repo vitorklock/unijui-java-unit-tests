@@ -1,5 +1,6 @@
-package domain.entities.movie;
+package application.domain.entities.rental;
 
+import application.domain.entities.movie.Movie;
 import java.time.LocalDate;
 
 // Deve ter:
