@@ -75,7 +75,7 @@ public class TestMovieService {
 
         Assertions.assertFalse(movie.isAvailable());
     }
-
+    @Test
     public void mustNotRentAlreadyRentedMovie() {
 
         service.save(movie);
