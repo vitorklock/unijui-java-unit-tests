@@ -1,4 +1,4 @@
-# Blockbuster Avaliação
+# Blockbuster Avaliação 
 
 Pequena aplicação de locadora de filmes (estilo Blockbuster) feita em Java com Spring Boot, usando repositórios em memória e uma página HTML simples para testar o fluxo E2E (end-to-end).
 
