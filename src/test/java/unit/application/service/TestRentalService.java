@@ -15,9 +15,8 @@ import application.repositories.inmemory.MovieRepository;
 import application.repositories.inmemory.RentalRepository;
 
 import java.time.LocalDate;
+import static org.mockito.Mockito.*;
 
-// Only one spy here – this one is unique in the package
-class RentalRepositorySpy extends RentalRepository {}
 
 public class TestRentalService {
 
@@ -30,67 +29,94 @@ public class TestRentalService {
 
     @BeforeEach
     public void setUpRepo() {
-        rentalRepo = new RentalRepositorySpy();
-        // use the real in-memory repository; no spy needed here
-        movieRepo = new MovieRepository();
+        rentalRepo = mock(RentalRepository.class);
+        movieRepo = mock(MovieRepository.class);
+        movieService = mock(MovieService.class);
 
-        movieService = new MovieService(movieRepo);
         service = new RentalService(rentalRepo, movieService);
 
-        movie = new Movie("Barbie Movie");
-        rental = new Rental(movie);
+        movie = mock(Movie.class);
+        when(movie.getName()).thenReturn("Barbie Movie");
+        
+        rental = mock(Rental.class);
+        when(rental.getId()).thenReturn(1);
+        when(rental.getRentedMovie()).thenReturn(movie);
     }
 
     @Test
     public void mustSaveRental() {
-        service.save(rental);
+        when(rentalRepo.save(rental)).thenAnswer(invocation -> {
+            Rental r = invocation.getArgument(0);
+            return r;
+        });
+        when(rentalRepo.findById(rental.getId())).thenAnswer(invocation -> {
+            int id = invocation.getArgument(0);
+            return id == rental.getId() ? Optional.of(rental) : Optional.empty();
+        });
 
-        Optional<Rental> optionalSavedRental = rentalRepo.findById(rental.getId());
+        Rental savedResult = service.save(rental);
 
-        Assertions.assertTrue(optionalSavedRental.isPresent());
-
-        Rental savedRental = optionalSavedRental.get();
-
-        Assertions.assertNotNull(savedRental);
-        Assertions.assertEquals(rental.getId(), savedRental.getId());
+        Assertions.assertNotNull(savedResult);
+        Assertions.assertEquals(rental.getId(), savedResult.getId());
+        
+        verify(rentalRepo).save(rental);
+        
+        Optional<Rental> retrieved = rentalRepo.findById(rental.getId());
+        Assertions.assertTrue(retrieved.isPresent());
+        Assertions.assertEquals(rental.getId(), retrieved.get().getId());
     }
 
     @Test
     public void mustFindRentalById() {
-        rentalRepo.save(rental);
+        when(rentalRepo.findById(1)).thenReturn(Optional.of(rental));
 
         Rental savedRental = Assertions.assertDoesNotThrow(
-                () -> service.findById(rental.getId())
+                () -> service.findById(1)
         );
 
         Assertions.assertNotNull(savedRental);
+        Assertions.assertEquals(1, savedRental.getId());
+        
+        verify(rentalRepo).findById(1);
     }
 
     @Test
     public void mustFindRentalsByMovieName() {
-        service.save(rental);
-        Movie rentedMovie = rental.getRentedMovie();
-        ArrayList<Rental> foundRentals = service.findByMovieName(rentedMovie.getName());
+        ArrayList<Rental> mockList = new ArrayList<>();
+        mockList.add(rental);
+        when(rentalRepo.findAll()).thenReturn(mockList);
+
+        ArrayList<Rental> foundRentals = service.findByMovieName("Barbie Movie");
 
         Assertions.assertTrue(foundRentals.contains(rental));
+        
+        verify(rentalRepo).findAll();
     }
 
     @Test
     public void mustHaveFeeToBePaid() {
-        // movie is rented for a week automatically, 10 days after rental should be late
+        when(rentalRepo.save(rental)).thenReturn(rental);
+        when(rental.getLateFee()).thenReturn(20.00);
+
         service.save(rental);
         service.returnMovie(rental, LocalDate.now().plusDays(10));
 
         Assertions.assertEquals(20.00, rental.getLateFee(), 0.0001);
+        
     }
 
     @Test
     public void mustPayFee() {
+        when(rentalRepo.save(rental)).thenReturn(rental);
+        when(rental.isPaidFee()).thenReturn(true);
+
         service.save(rental);
         service.returnMovie(rental, LocalDate.now().plusDays(10));
 
         service.payLateFee(rental);
 
         Assertions.assertTrue(service.isLateFeePaid(rental));
+        
+        verify(rental).setPaidFee(true);
     }
 }

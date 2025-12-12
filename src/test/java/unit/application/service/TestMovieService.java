@@ -14,9 +14,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import application.repositories.inmemory.MovieRepository;
+import static org.mockito.Mockito.*;
 
-class MovieRepositorySpy extends MovieRepository {
-}
+
 
 public class TestMovieService {
 
@@ -26,13 +26,17 @@ public class TestMovieService {
 
     @BeforeEach
     public void setUpRepo() {
-        repo = new MovieRepositorySpy();
+        repo = mock(MovieRepository.class);
         service = new MovieService(repo);
-        movie = new Movie("Barbie Movie");
+        movie = mock(Movie.class);
+        when(movie.getId()).thenReturn(1);
+        when(movie.getName()).thenReturn("Barbie Movie");
     }
 
     @Test
     public void mustSaveMovie() {
+        when(repo.save(movie)).thenReturn(movie);
+        when(repo.findById(1)).thenReturn(Optional.of(movie));
 
         service.save(movie);
 
@@ -44,44 +48,53 @@ public class TestMovieService {
 
         Assertions.assertNotNull(savedMovie);
         Assertions.assertEquals(movie.getId(), savedMovie.getId());
+        
+        verify(repo).save(movie);
     }
 
     @Test
     public void mustFindMovieById() {
+        when(repo.findById(1)).thenReturn(Optional.of(movie));
 
-        repo.save(movie);
-
-        Movie savedMovie = Assertions.assertDoesNotThrow(() -> service.findById(movie.getId()));
+        Movie savedMovie = Assertions.assertDoesNotThrow(() -> service.findById(1));
 
         Assertions.assertNotNull(savedMovie);
+        Assertions.assertEquals(1, savedMovie.getId());
+        
+        verify(repo).findById(1);
     }
 
     @Test
     public void mustFindMovieByName() {
+        ArrayList<Movie> mockList = new ArrayList<>();
+        mockList.add(movie);
+        when(repo.findAll()).thenReturn(mockList);
 
-        repo.save(movie);
-
-        ArrayList<Movie> foundMovies = service.findByName(movie.getName());
+        ArrayList<Movie> foundMovies = service.findByName("Barbie Movie");
 
         Assertions.assertTrue(foundMovies.contains(movie));
+        
+        verify(repo).findAll();
     }
 
     @Test
     public void mustNotBeAvailableAfterBeingRented() {
-
-        service.save(movie);
+        when(repo.save(movie)).thenReturn(movie);
+        when(repo.findById(movie.getId())).thenReturn(Optional.of(movie));
+        when(movie.isAvailable()).thenReturn(true);
 
         service.rentMovie(movie);
 
-        Assertions.assertFalse(movie.isAvailable());
+
+        verify(movie).setAvailable(false);
+        verify(repo).save(movie);
     }
+    
     @Test
     public void mustNotRentAlreadyRentedMovie() {
-
-        service.save(movie);
-
-        service.rentMovie(movie);
-        Assertions.assertFalse(movie.isAvailable());
+        when(repo.save(movie)).thenReturn(movie);
+        when(repo.findById(movie.getId())).thenReturn(Optional.of(movie));
+        when(movie.isAvailable()).thenReturn(false);
 
         IllegalStateException ex = Assertions.assertThrows(
                 IllegalStateException.class,
